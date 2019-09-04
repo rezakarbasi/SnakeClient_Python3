@@ -6,7 +6,7 @@ from src.World import *
 import src.ClientGreedy as c_greedy
 import src.ClientRandom as c_random
 import src.ClientBest as c_best
-import src.YourClient as c_your
+import src.YourClient as c_reza
 import signal
 is_run = True
 
@@ -71,8 +71,8 @@ def run():
                 action = c_random.get_action(world)
             elif args.client_type == 'best':
                 action = c_best.get_action(world)
-            elif args.client_type == 'your':
-                action = c_your.get_action(world)
+            elif args.client_type == 'reza':
+                action = c_reza.get_action(world)
             elif args.client_type == 'hand':
                 action = input('enter action (u or d or l or r:')
 
