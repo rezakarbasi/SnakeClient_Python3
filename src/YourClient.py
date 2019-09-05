@@ -1,6 +1,7 @@
 from src.World import *
 import random
 
+
 class Node:
     def __init__(self, point: Vector2D):
         # self.value = value
@@ -44,16 +45,22 @@ def aStar(start: Node,  goal: Vector2D,  obs: list):
 
     # Add the starting point to the open set
     openset.add(current)
-    
+
+    counter = 0
+
     # While the open set is not empty
     while openset:
+        counter += 1
+        if counter > 150:
+            return []
+
         # Find the item in the open set with the lowest G + H score
         current = min(openset, key=lambda o: o.G + o.H)
 
         # If it is the item we want, retrace the path and return it
         if current.point == goal:
             path = []
-            while current.parent.point is not start.point :
+            while current.parent.point is not start.point:
                 path.append(current.point)
                 current = current.parent
             path.append(current.point)
@@ -121,20 +128,20 @@ def get_action(world: World):
             obstacle_2.append(snake_temp_head + Vector2D(-1, 0))
             obstacle_2.append(snake_temp_head + Vector2D(0, -1))
 
-    a_star=aStar(Node(head_pos),world.goal_position,obstacle_1)
-    
+    a_star = aStar(Node(head_pos), world.goal_position, obstacle_1)
+
     h_number = -1
     for h in next_head:
         h_number += 1
-        
+
         if h in obstacle_1:
             next_head_price[h_number] += 60
         if h in obstacle_2:
-            next_head_price[h_number] += 20*obstacle_2.count(h)      
+            next_head_price[h_number] += 20*obstacle_2.count(h)
         if h in a_star:
-          next_head_price[h_number]-=15  
+            next_head_price[h_number] -= 15
         # next_head_price[h_number]+=world.goal_position.dist(h)
-    
+
     print(next_head_price)
     print(actions)
     mini = min(next_head_price)
