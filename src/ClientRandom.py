@@ -2,7 +2,6 @@ from src.World import *
 import random
 
 # this code always show my recent code
-
 def get_action(world: World):
     head_pos = world.get_self().get_head()
     next_head = []
