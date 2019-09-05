@@ -51,7 +51,7 @@ def aStar(start: Node,  goal: Vector2D,  obs: list):
     # While the open set is not empty
     while openset:
         counter += 1
-        if counter > 80:  # resideG
+        if counter > 40:  # resideG
             return []
 
         # Find the item in the open set with the lowest G + H score
@@ -112,10 +112,11 @@ def my_fast_selection(next_head: list, goal: Vector2D, obstacle_1: list, obstacl
         h_number += 1
 
         if h in obstacle_1:
-            next_head_price[h_number] += 60                         # resideG
-        if h in obstacle_2:
-            next_head_price[h_number] += 15*obstacle_2.count(h)     # resideG
-        next_head_price[h_number] += 2*goal.dist(h)
+            next_head_price[h_number] += 1000                         # resideG
+        else :
+            if h in obstacle_2:
+                next_head_price[h_number] += 15*obstacle_2.count(h)     # resideG
+            next_head_price[h_number] += 3*goal.dist(h)
 
     return next_head_price
 
@@ -135,7 +136,7 @@ def check_next(pos: Vector2D, obs1, obs2):
     obs1.append(pos)
     for i in range(4):
         if next_head[i] in obs1:
-            out[i] += 100                   # resideG
+            out[i] += 1000                   # resideG
 
         else:
             if next_head[i] in obs2:
@@ -157,11 +158,11 @@ def check_next(pos: Vector2D, obs1, obs2):
 
             # resideG
             if num_surrounded > 14:
-                out[i] += 40
-            elif num_surrounded > 10:
-                out[i] += 18
+                out[i] += 50
+            elif num_surrounded > 9:
+                out[i] += 10
             elif num_surrounded > 6:
-                out[i] += 9
+                out[i] += 3
 
     return out
 
@@ -208,7 +209,7 @@ def get_action(world: World):
 
     a_star = []
 
-    if 3*min_dist < my_dist:
+    if (2.5*min_dist) < my_dist:
         # fast selection to center
         next_head_price = my_fast_selection(
             next_head, Vector2D(14, 14), obstacle_1, obstacle_2)
