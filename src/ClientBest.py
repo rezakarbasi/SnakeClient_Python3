@@ -68,7 +68,7 @@ def aStar(start: Node,  goal: Vector2D,  obs: list, heurWeight, maxOpenList):
     # While the open set is not empty
     while openset:
         counter += 1
-        if counter > 40:  # resideG
+        if counter > 45:  # resideG
             print(counter)
             return aStar_end(openset, start)
 

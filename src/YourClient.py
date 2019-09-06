@@ -69,7 +69,6 @@ def aStar(start: Node,  goal: Vector2D,  obs: list, heurWeight, maxOpenList):
     while openset:
         counter += 1
         if counter > 40:  # resideG
-            print(counter)
             return aStar_end(openset, start)
 
         while len(openset) > maxOpenList:
@@ -83,14 +82,12 @@ def aStar(start: Node,  goal: Vector2D,  obs: list, heurWeight, maxOpenList):
         if current.point == goal:
             path = []
             if current.parent is None:
-                print(counter)
                 return aStar_end(openset, start)
 
             while current.parent.point is not start.point:
                 # path.append(current.point)
                 current = current.parent
             path.append(current.point)
-            print(counter)
             return path
 
         # Remove the item from the open set
@@ -126,7 +123,6 @@ def aStar(start: Node,  goal: Vector2D,  obs: list, heurWeight, maxOpenList):
 
     # Throw an exception if there is no path
     # raise ValueError('No Path Found')
-    print(counter)
     return aStar_end(openset, start)
 
 
@@ -225,7 +221,6 @@ def get_action(world: World):
         obstacle_1 += snake_temp.get_body()
 
         if snake_temp_head is not head_pos:
-            print('Y')
             obstacle_2.append(snake_temp_head + Vector2D(1, 0))
             obstacle_2.append(snake_temp_head + Vector2D(0, 1))
             obstacle_2.append(snake_temp_head + Vector2D(-1, 0))
@@ -234,7 +229,6 @@ def get_action(world: World):
     a_star = []
 
     if (2.5*min_dist) < my_dist:
-        print('1111111111111111111111111111111111111111111')
         heu = 1
         newGoal = Vector2D(14, 15)
         if head_pos.i > 15 and head_pos.j > 15:
@@ -257,18 +251,9 @@ def get_action(world: World):
         a_star = aStar(Node(head_pos), Vector2D(14, 15), obstacle_1, heu, 30)
 
         if len(a_star) == 0:
-            print('WWWWWWWWWWWWWWWWWWWWWWWoWWWWWW')
             next_head_price = my_fast_selection(
                 next_head, goal, obstacle_1, obstacle_2)
-        # fast selection to center
-        # next_head_price = my_fast_selection(
-        #     next_head, Vector2D(14, 14), obstacle_1, obstacle_2)
-    # elif my_dist > 25:
-    #     # fast selection to goal
-    #     next_head_price = my_fast_selection(
-    #         next_head, goal, obstacle_1, obstacle_2)
     else:
-        print('222222222222222222222222222222222222222222222')
         heu = 1
         if my_dist > 30:
             heu = 4
@@ -279,7 +264,6 @@ def get_action(world: World):
         a_star = aStar(Node(head_pos), goal, obstacle_1, heu, 30)
 
         if len(a_star) == 0:
-            print('NNNOOOOOOOOOOOOOOOOOOOOOOO')
             next_head_price = my_fast_selection(
                 next_head, goal, obstacle_1, obstacle_2)
 
@@ -290,16 +274,9 @@ def get_action(world: World):
 
         next_head_price[h_number] += next_price[h_number]
 
-        # if h in obstacle_1:
-        #     next_head_price[h_number] += 60
-        # if h in obstacle_2:
-        #     next_head_price[h_number] += 15*obstacle_2.count(h)
         if h in a_star:
-            print('YYEEEEEESSSSSSSSSSSSSSSSSSSSSSS')
             next_head_price[h_number] -= 20             # resideG
 
-    print(next_head_price)
-    print(actions)
     mini = min(next_head_price)
     for h_number in range(4):
         if next_head_price[h_number] == mini:
