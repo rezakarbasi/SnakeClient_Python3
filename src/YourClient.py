@@ -240,7 +240,7 @@ def get_action(world: World):
             heu = 2
         a_star = aStar(Node(head_pos), Vector2D(14, 15), obstacle_1, heu)
 
-        if a_star is []:
+        if len(a_star) == 0:
             print('WWWWWWWWWWWWWWWWWWWWWWWoWWWWWW')
             next_head_price = my_fast_selection(
                 next_head, goal, obstacle_1, obstacle_2)
@@ -262,7 +262,7 @@ def get_action(world: World):
             heu = 2
         a_star = aStar(Node(head_pos), goal, obstacle_1, heu)
 
-        if a_star is []:
+        if len(a_star) == 0:
             print('NNNOOOOOOOOOOOOOOOOOOOOOOO')
             next_head_price = my_fast_selection(
                 next_head, goal, obstacle_1, obstacle_2)
