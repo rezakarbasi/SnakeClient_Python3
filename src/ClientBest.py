@@ -137,7 +137,14 @@ def my_fast_selection(next_head: list, goal: Vector2D, obstacle_1: list, obstacl
     h_number = -1
     for h in next_head:
         h_number += 1
-        next_head_price[h_number] += 3*goal.dist(h)
+
+        if h in obstacle_1:
+            next_head_price[h_number] += 1000                         # resideG
+        else:
+            if h in obstacle_2:
+                next_head_price[h_number] += 15 * \
+                    obstacle_2.count(h)     # resideG
+            next_head_price[h_number] += 3*goal.dist(h)
 
     return next_head_price
 
