@@ -35,7 +35,7 @@ def manhattan(point, point2):
     return point.point.dist(point2)
 
 
-def aStar(start: Node,  goal: Vector2D,  obs: list, heurWeight):
+def aStar(start: Node,  goal: Vector2D,  obs: list, heurWeight, maxOpenList):
     # The open and closed sets
     openset = set()
     closedset = set()
@@ -54,6 +54,9 @@ def aStar(start: Node,  goal: Vector2D,  obs: list, heurWeight):
         if counter > 40:  # resideG
             print(counter)
             return []
+
+        while len(openset) > maxOpenList:
+            openset.remove(max(openset, key=lambda o: o.G + heurWeight*o.H))
 
         # Find the item in the open set with the lowest G + H score
         current = min(openset, key=lambda o: o.G +
@@ -165,12 +168,12 @@ def check_next(pos: Vector2D, obs1, obs2):
                     num_surrounded += 1         # resideG
 
             # resideG
-            if num_surrounded > 14:
-                out[i] += 50
+            if num_surrounded > 12:
+                out[i] += 100
             elif num_surrounded > 9:
-                out[i] += 10
+                out[i] += 15
             elif num_surrounded > 6:
-                out[i] += 3
+                out[i] += 10
 
     return out
 
@@ -217,7 +220,7 @@ def get_action(world: World):
 
     a_star = []
 
-    if (3*min_dist) < my_dist:
+    if (2.5*min_dist) < my_dist:
         print('1111111111111111111111111111111111111111111')
         heu = 1
         newGoal = Vector2D(14, 15)
@@ -238,7 +241,7 @@ def get_action(world: World):
             heu = 3
         elif toCenter > 10:
             heu = 2
-        a_star = aStar(Node(head_pos), Vector2D(14, 15), obstacle_1, heu)
+        a_star = aStar(Node(head_pos), Vector2D(14, 15), obstacle_1, heu, 30)
 
         if len(a_star) == 0:
             print('WWWWWWWWWWWWWWWWWWWWWWWoWWWWWW')
@@ -260,7 +263,7 @@ def get_action(world: World):
             heu = 3
         elif my_dist > 10:
             heu = 2
-        a_star = aStar(Node(head_pos), goal, obstacle_1, heu)
+        a_star = aStar(Node(head_pos), goal, obstacle_1, heu, 30)
 
         if len(a_star) == 0:
             print('NNNOOOOOOOOOOOOOOOOOOOOOOO')
