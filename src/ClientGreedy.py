@@ -12,10 +12,6 @@ class Node:
     # def move_cost(self,other):
     #     return 0 if self.value == '.' else 1
 
-class ProbObstacle:
-    def __init__(self,point:Vector2D,dist):
-        self.point=point
-        self.prob=-dist
 
 def children(point: Vector2D, obs: list):
     out = set()
@@ -120,7 +116,7 @@ def my_fast_selection(next_head: list, goal: Vector2D, obstacle_1: list, obstacl
         else :
             if h in obstacle_2:
                 next_head_price[h_number] += 15*obstacle_2.count(h)     # resideG
-            next_head_price[h_number] += 10*goal.dist(h)
+            next_head_price[h_number] += 3*goal.dist(h)
 
     return next_head_price
 
@@ -206,17 +202,10 @@ def get_action(world: World):
         obstacle_1 += snake_temp.get_body()
 
         if snake_temp_head is not head_pos:
-            aa=snake_temp_head + Vector2D(1, 0)
-            obstacle_2.append(ProbObstacle(aa,goal.dist()))
-
-            aa=snake_temp_head + Vector2D(0, 1)
-            obstacle_2.append(ProbObstacle(aa,goal.dist()))
-
-            aa=snake_temp_head + Vector2D(-1,0)
-            obstacle_2.append(ProbObstacle(aa,goal.dist()))
-
-            aa=snake_temp_head + Vector2D(0, -1)
-            obstacle_2.append(ProbObstacle(aa,goal.dist()))
+            obstacle_2.append(snake_temp_head + Vector2D(1, 0))
+            obstacle_2.append(snake_temp_head + Vector2D(0, 1))
+            obstacle_2.append(snake_temp_head + Vector2D(-1, 0))
+            obstacle_2.append(snake_temp_head + Vector2D(0, -1))
 
     a_star = []
 
