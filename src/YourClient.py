@@ -31,6 +31,23 @@ def children(point: Vector2D, obs: list):
     return out
 
 
+def aStar_end(openset, start):
+    out = []
+    for i in range(2):
+        if len(openset) == 0:
+            return out
+        temp = min(openset, key=lambda o: o.G + o.H)
+        openset.remove(temp)
+
+        if temp.parent is None:
+            return out
+
+        while(temp.parent.point is not start.point):
+            temp = temp.parent
+        out.append(temp.point)
+    return out
+
+
 def manhattan(point, point2):
     return point.point.dist(point2)
 
@@ -53,7 +70,7 @@ def aStar(start: Node,  goal: Vector2D,  obs: list, heurWeight, maxOpenList):
         counter += 1
         if counter > 40:  # resideG
             print(counter)
-            return []
+            return aStar_end(openset, start)
 
         while len(openset) > maxOpenList:
             openset.remove(max(openset, key=lambda o: o.G + heurWeight*o.H))
@@ -67,10 +84,10 @@ def aStar(start: Node,  goal: Vector2D,  obs: list, heurWeight, maxOpenList):
             path = []
             if current.parent is None:
                 print(counter)
-                return []
+                return aStar_end(openset, start)
 
             while current.parent.point is not start.point:
-                path.append(current.point)
+                # path.append(current.point)
                 current = current.parent
             path.append(current.point)
             print(counter)
@@ -110,7 +127,7 @@ def aStar(start: Node,  goal: Vector2D,  obs: list, heurWeight, maxOpenList):
     # Throw an exception if there is no path
     # raise ValueError('No Path Found')
     print(counter)
-    return []
+    return aStar_end(openset, start)
 
 
 def my_fast_selection(next_head: list, goal: Vector2D, obstacle_1: list, obstacle_2: list):
@@ -170,6 +187,8 @@ def check_next(pos: Vector2D, obs1, obs2):
             # resideG
             if num_surrounded > 12:
                 out[i] += 100
+            if num_surrounded > 11:
+                out[i] += 20
             elif num_surrounded > 9:
                 out[i] += 15
             elif num_surrounded > 6:
@@ -213,6 +232,7 @@ def get_action(world: World):
         obstacle_1 += snake_temp.get_body()
 
         if snake_temp_head is not head_pos:
+            print('Y')
             obstacle_2.append(snake_temp_head + Vector2D(1, 0))
             obstacle_2.append(snake_temp_head + Vector2D(0, 1))
             obstacle_2.append(snake_temp_head + Vector2D(-1, 0))
