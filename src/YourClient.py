@@ -177,7 +177,7 @@ def check_next(pos: Vector2D, obs1, obs2):
             if num_surrounded > 12:
                 out[i] += 100
             if num_surrounded > 11:
-                out[i] += 20
+                out[i] += 19
             elif num_surrounded > 9:
                 out[i] += 15
             elif num_surrounded > 6:
@@ -198,10 +198,6 @@ def get_action(world: World):
     next_head_price = [0, 0, 0, 0]
     actions = ['d', 'r', 'u', 'l']
 
-    if goal in next_head:
-        for i in range(4):
-            if next_head[i] is goal:
-                return actions[i]
 
     obstacle_1 = []
     obstacle_2 = []
@@ -228,7 +224,7 @@ def get_action(world: World):
 
     a_star = []
 
-    if (2.5*min_dist) < my_dist:
+    if ((2.5*min_dist) < my_dist) or (min_dist<6 and my_dist>7):
         heu = 1
         newGoal = Vector2D(14, 15)
         if head_pos.i > 15 and head_pos.j > 15:
