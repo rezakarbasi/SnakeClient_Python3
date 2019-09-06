@@ -35,7 +35,7 @@ def manhattan(point, point2):
     return point.point.dist(point2)
 
 
-def aStar(start: Node,  goal: Vector2D,  obs: list):
+def aStar(start: Node,  goal: Vector2D,  obs: list, heurWeight):
     # The open and closed sets
     openset = set()
     closedset = set()
@@ -52,19 +52,25 @@ def aStar(start: Node,  goal: Vector2D,  obs: list):
     while openset:
         counter += 1
         if counter > 40:  # resideG
+            print(counter)
             return []
 
         # Find the item in the open set with the lowest G + H score
         current = min(openset, key=lambda o: o.G +
-                      o.H)                 # resideG
+                      heurWeight*o.H)                 # resideG
 
         # If it is the item we want, retrace the path and return it
         if current.point == goal:
             path = []
+            if current.parent is None:
+                print(counter)
+                return []
+
             while current.parent.point is not start.point:
                 path.append(current.point)
                 current = current.parent
             path.append(current.point)
+            print(counter)
             return path
 
         # Remove the item from the open set
@@ -100,6 +106,7 @@ def aStar(start: Node,  goal: Vector2D,  obs: list):
 
     # Throw an exception if there is no path
     # raise ValueError('No Path Found')
+    print(counter)
     return []
 
 
@@ -113,9 +120,10 @@ def my_fast_selection(next_head: list, goal: Vector2D, obstacle_1: list, obstacl
 
         if h in obstacle_1:
             next_head_price[h_number] += 1000                         # resideG
-        else :
+        else:
             if h in obstacle_2:
-                next_head_price[h_number] += 15*obstacle_2.count(h)     # resideG
+                next_head_price[h_number] += 15 * \
+                    obstacle_2.count(h)     # resideG
             next_head_price[h_number] += 3*goal.dist(h)
 
     return next_head_price
@@ -209,18 +217,53 @@ def get_action(world: World):
 
     a_star = []
 
-    if (2.5*min_dist) < my_dist:
-        # fast selection to center
-        next_head_price = my_fast_selection(
-            next_head, Vector2D(14, 14), obstacle_1, obstacle_2)
-    elif my_dist > 25:
-        # fast selection to goal
-        next_head_price = my_fast_selection(
-            next_head, goal, obstacle_1, obstacle_2)
-    else:
-        a_star = aStar(Node(head_pos), goal, obstacle_1)
+    if (3*min_dist) < my_dist:
+        print('1111111111111111111111111111111111111111111')
+        heu = 1
+        newGoal = Vector2D(14, 15)
+        if head_pos.i > 15 and head_pos.j > 15:
+            newGoal = Vector2D(10, 10)
+        elif head_pos.i < 15 and head_pos.j > 15:
+            newGoal = Vector2D(20, 10)
+        elif head_pos.i > 15 and head_pos.j < 15:
+            newGoal = Vector2D(10, 20)
+        else:
+            newGoal = Vector2D(20, 20)
+
+        toCenter = head_pos.dist(newGoal)
+
+        if toCenter > 30:
+            heu = 4
+        elif toCenter > 20:
+            heu = 3
+        elif toCenter > 10:
+            heu = 2
+        a_star = aStar(Node(head_pos), Vector2D(14, 15), obstacle_1, heu)
 
         if a_star is []:
+            print('WWWWWWWWWWWWWWWWWWWWWWWoWWWWWW')
+            next_head_price = my_fast_selection(
+                next_head, goal, obstacle_1, obstacle_2)
+        # fast selection to center
+        # next_head_price = my_fast_selection(
+        #     next_head, Vector2D(14, 14), obstacle_1, obstacle_2)
+    # elif my_dist > 25:
+    #     # fast selection to goal
+    #     next_head_price = my_fast_selection(
+    #         next_head, goal, obstacle_1, obstacle_2)
+    else:
+        print('222222222222222222222222222222222222222222222')
+        heu = 1
+        if my_dist > 30:
+            heu = 4
+        elif my_dist > 20:
+            heu = 3
+        elif my_dist > 10:
+            heu = 2
+        a_star = aStar(Node(head_pos), goal, obstacle_1, heu)
+
+        if a_star is []:
+            print('NNNOOOOOOOOOOOOOOOOOOOOOOO')
             next_head_price = my_fast_selection(
                 next_head, goal, obstacle_1, obstacle_2)
 
@@ -236,6 +279,7 @@ def get_action(world: World):
         # if h in obstacle_2:
         #     next_head_price[h_number] += 15*obstacle_2.count(h)
         if h in a_star:
+            print('YYEEEEEESSSSSSSSSSSSSSSSSSSSSSS')
             next_head_price[h_number] -= 20             # resideG
 
     print(next_head_price)
