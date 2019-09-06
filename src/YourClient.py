@@ -65,6 +65,8 @@ def aStar(start: Node,  goal: Vector2D,  obs: list, heurWeight, maxOpenList):
 
     counter = 0
 
+    charkhesh = 0
+
     # While the open set is not empty
     while openset:
         counter += 1
@@ -75,8 +77,14 @@ def aStar(start: Node,  goal: Vector2D,  obs: list, heurWeight, maxOpenList):
             openset.remove(max(openset, key=lambda o: o.G + heurWeight*o.H))
 
         # Find the item in the open set with the lowest G + H score
-        current = min(openset, key=lambda o: o.G +
-                      heurWeight*o.H)                 # resideG
+        charkhesh += 1
+        if charkhesh is 4:
+            charkhesh = 0
+            current = min(openset, key=lambda o: heurWeight *
+                          o.G + o.H)                 # resideG
+        else:
+            current = min(openset, key=lambda o: o.G +
+                          heurWeight*o.H)                 # resideG
 
         # If it is the item we want, retrace the path and return it
         if current.point == goal:
