@@ -1,8 +1,69 @@
 from src.World import *
 import random
 
-class Example:
-    staticVariable = 5 # Access through class
+class Snakes(object):
+    _snake = [{"head": Vector2D(100, 100), 'body': [], 'tail':Vector2D(100, 100)}, {"head": Vector2D(100, 100), 'body': [], 'tail':Vector2D(100, 100)}, {
+        "head": Vector2D(100, 100), 'body': [], 'tail':Vector2D(100, 100)}, {"head": Vector2D(100, 100), 'body': [], 'tail':Vector2D(100, 100)}]
+
+    @property
+    def tail(self, num):
+        return type(self)._snake[num]['tail']
+
+    @property
+    def head(self, num):
+        return type(self)._snake[num]['head']
+
+    @property
+    def body(self, num):
+        return type(self)._snake[num]['body']
+
+    def setTail(self, num, t: Vector2D):
+        (self)._snake[num]['tail'] = t
+
+    def setHead(self, num, h: Vector2D):
+        (self)._snake[num]['head'] = h
+
+    def setBody(self, num, b: list):
+        (self)._snake[num]['body'] = b
+
+    def update_snake(self, num, body, head, goal):
+        delta = head.dist((self)._snake[num]['head'])
+        if delta > 1:
+
+            a = head
+            b = body
+
+            (self)._snake[num]['head'] = head
+            (self)._snake[num]['body'].clear()
+            (self)._snake[num]['body'].append(a)
+
+            while len(b) != 0:
+                for i in range(len(b)):
+                    c = b[i]
+                    if c.dist(a) == 1:
+                        (self)._snake[num]['body'].append(c)
+                        a = c
+                        break
+
+            (self)._snake[num]['tail'] = a
+
+        elif goal.dist((self)._snake[num]['head']) == 0:
+            (self)._snake[num]['head'] = goal
+            (self)._snake[num]['body'].append(Vector2D(0, 0))
+            length = len(b)
+            for i in range(length-1):
+                (self)._snake[num]['body'][length-1 -
+                                           i] = (self)._snake[num]['body'][length-2-i]
+            (self)._snake[num]['body'][0] = (self)._snake[num]['head']
+        else:
+            (self)._snake[num]['head'] = head
+            length = len(b)
+            for i in range(length-1):
+                (self)._snake[num]['body'][length-1 -
+                                           i] = (self)._snake[num]['body'][length-2-i]
+            (self)._snake[num]['body'][0] = (self)._snake[num]['head']
+            (self)._snake[num]['tail'] = (self)._snake[num]['body'][length-1]
+
 
 class Node:
     def __init__(self, point: Vector2D):
@@ -199,9 +260,6 @@ def check_next(pos: Vector2D, obs1, obs2):
 
 
 def get_action(world: World):
-    aaa=Example()
-    aaa.staticVariable+=1
-    print('---------------------- static ------------------------\n',aaa.staticVariable)
 
     goal = world.goal_position
     head_pos = world.get_self().get_head()
@@ -213,6 +271,10 @@ def get_action(world: World):
     next_head.append(head_pos + Vector2D(0, -1))
     next_head_price = [0, 0, 0, 0]
     actions = ['d', 'r', 'u', 'l']
+
+    staticVar = Snakes()
+    staticVar.update_snake(0, world.get_self().get_body(), head_pos, goal)
+    print(staticVar.tail(0))
 
     obstacle_1 = []
     obstacle_2 = []
@@ -231,7 +293,7 @@ def get_action(world: World):
         snake_temp = world.snakes[s]
         snake_temp_head = world.snakes[s].get_head()
 
-        print('Snake num ', c, '  :  ', snake_temp.get_body())
+        # print('Snake num ', c, '  :  ', snake_temp.get_body())
         obstacle_1 += snake_temp.get_body()
 
         if snake_temp_head is not head_pos:
