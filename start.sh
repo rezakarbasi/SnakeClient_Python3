@@ -8,10 +8,10 @@ echo " All rights reserved."
 echo "******************************************************************"
 
 player="client.py"
-type="greedy" #greedy, random, hand, best, your
+type="reza" #greedy, random, hand, best, your
 host="127.0.0.1"
 port=20002
-teamname="SnakeBase"
+teamname="viper"
 
 if [ $# -eq 2 ]
 then
