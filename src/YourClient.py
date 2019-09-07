@@ -244,7 +244,7 @@ def get_action(world: World):
             newGoal = Vector2D(20, 20)
 
         toCenter = head_pos.dist(newGoal)
-        print('goal ', newGoal)
+        # print('goal ', newGoal)
 
         if toCenter > 30:
             heu = 4
@@ -258,7 +258,7 @@ def get_action(world: World):
             next_head_price = my_fast_selection(
                 next_head, goal, obstacle_1, obstacle_2)
     else:
-        print('goal ', goal)
+        # print('goal ', goal)
         heu = 1
         if my_dist > 30:
             heu = 4
