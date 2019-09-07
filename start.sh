@@ -8,7 +8,7 @@ echo " All rights reserved."
 echo "******************************************************************"
 
 player="client.py"
-type="reza" #greedy, random, hand, best, your
+type="your" #greedy, random, hand, best, your
 host="127.0.0.1"
 port=20002
 teamname="viper"

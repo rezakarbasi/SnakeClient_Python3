@@ -1,6 +1,8 @@
 from src.World import *
 import random
 
+class Example:
+    staticVariable = 5 # Access through class
 
 class Node:
     def __init__(self, point: Vector2D):
@@ -78,10 +80,12 @@ def aStar(start: Node,  goal: Vector2D,  obs: list, heurWeight, maxOpenList):
 
         # Find the item in the open set with the lowest G + H score
         charkhesh += 1
-        if charkhesh is 4:
+        if charkhesh == 6:
             charkhesh = 0
-            current = min(openset, key=lambda o: heurWeight *
-                          o.G + o.H)                 # resideG
+            # resideG
+            current = min(openset, key=lambda o: heurWeight * o.G + o.H)
+        elif charkhesh > 3:
+            current = min(openset, key=lambda o: o.G + o.H)
         else:
             current = min(openset, key=lambda o: o.G +
                           heurWeight*o.H)                 # resideG
@@ -195,6 +199,10 @@ def check_next(pos: Vector2D, obs1, obs2):
 
 
 def get_action(world: World):
+    aaa=Example()
+    aaa.staticVariable+=1
+    print('---------------------- static ------------------------\n',aaa.staticVariable)
+
     goal = world.goal_position
     head_pos = world.get_self().get_head()
 
@@ -213,7 +221,9 @@ def get_action(world: World):
 
     min_dist = 1000
     my_dist = goal.dist(head_pos)
+    c = 0
     for s in world.snakes:
+        c += 1
         t = world.snakes[s].get_head().dist(goal)
         if min_dist > t:
             min_dist = t
@@ -221,6 +231,7 @@ def get_action(world: World):
         snake_temp = world.snakes[s]
         snake_temp_head = world.snakes[s].get_head()
 
+        print('Snake num ', c, '  :  ', snake_temp.get_body())
         obstacle_1 += snake_temp.get_body()
 
         if snake_temp_head is not head_pos:
